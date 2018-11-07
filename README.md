@@ -1,2 +1,2 @@
 # SnakevsBlocks
-Snake vs Block game by using javafx
+Snake vs Block game in java
