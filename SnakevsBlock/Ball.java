@@ -1,32 +1,28 @@
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Color; 
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
 import java.util.Random;
 
-public class Ball {
-	private Circle circle;
-	private int x;
-	private int y;
-	private int value;
-	private Text text;
+public class Ball extends Token {
 	Ball(){
-		text=new Text();
+		super(new Circle());
 		Random rand=new Random();
-		x=rand.nextInt(4)*100 + 50;
-		y=0;
-		circle=new Circle(x,y,10);
-		circle.setFill(Color.YELLOW);
-		value=rand.nextInt(15)+1;
-		text.setText(Integer.toString(value));
-		text.setX(circle.getCenterX()-5);
-		text.setY(circle.getCenterY()+2);
+		int x=rand.nextInt(4)*100 + 50;
+		int y=0;
+		super.gettoken().setLayoutX(x);
+		super.gettoken().setLayoutY(y);
+		((Circle) super.gettoken()).setRadius(10);
+		super.gettoken().setFill(Color.YELLOW);
+		super.setx(x);
+		super.sety(0);
+		int value=rand.nextInt(15)+1;
+		super.setvalue(value);
+		super.gettext().setText(Integer.toString(value));
+		super.gettext().setX(super.gettoken().getLayoutX()-5);
+		super.gettext().setY(super.gettoken().getLayoutY()+2);
 		
-	}
-	public Circle getBall() {
-		return circle;
-	}
-	public Text gettext() {
-		return text;
 	}
 }

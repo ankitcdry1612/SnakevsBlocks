@@ -10,7 +10,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainMenu {
-	private Scene scene;
 	private Pane pane;
 	private Button start;
 	private Button exit;
@@ -18,7 +17,7 @@ public class MainMenu {
 	private Button leaderboard;
 	private Button help;
 	private Gameplay game;
-	public MainMenu(Stage stage) {
+	public MainMenu(Scene scene) {
 		pane=new Pane();
 		
 		pane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
@@ -27,11 +26,11 @@ public class MainMenu {
 		resume=new Button("Resume");
 		leaderboard=new Button("Leaderboard");
 		help=new Button("Help");
-		setup(stage);
-		scene=new Scene(pane,500,650);
-		help(stage);
+		setup(scene);
+		help(scene);
+		scene.setRoot(pane);
 	}
-	public void help(Stage stage) {
+	public void help(Scene scene) {
 		Pane helppane=new Pane();
 		Image image3 = new Image("file:Help.jpeg");
 		ImageView image2 = new ImageView();
@@ -81,7 +80,6 @@ public class MainMenu {
 		text8.setFill(Color.RED);
 		helppane.getChildren().addAll(image2,text1,text2,text3,text4,text5,text6,text7,text8,back);
 		help.setOnAction(e -> {
-			stage.setTitle("Help-Menu");
 			scene.setRoot(helppane);
 			back.setOnAction(e1 -> {
 				scene.setRoot(pane);
@@ -93,7 +91,7 @@ public class MainMenu {
 			System.exit(0);
 		});
 	}
-	public void setup(Stage stage) {
+	public void setup(Scene scene) {
 		Image image = new Image("file:SnakevsBlock.png");
 		ImageView image1 = new ImageView();
 		image1.setImage(image);
@@ -121,10 +119,8 @@ public class MainMenu {
 		help.setLayoutY(320.0);
 		exit.setLayoutX(100.0);
 		exit.setLayoutY(400.0);
-		stage.setTitle("Snake Vs Block");
 		start.setOnAction(e ->{
-			game=new Gameplay(stage,scene);
-			scene.setRoot(game.getpane());
+			game=new Gameplay(scene);
 		});
 		exit.setOnAction(e ->{
 			System.exit(0);
@@ -133,8 +129,5 @@ public class MainMenu {
 	}
 	public Pane getpane() {
 		return pane;
-	}
-	public Scene getscene() {
-		return scene;
 	}
 }

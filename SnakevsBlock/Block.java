@@ -42,4 +42,11 @@ public class Block {
 	public Text gettext() {
 		return text;
 	}
+	public int getx() {
+		return x/100;
+	}
+	public void setx() {
+		Random rand=new Random();
+		this.x=rand.nextInt(5)*100;
+	}
 }

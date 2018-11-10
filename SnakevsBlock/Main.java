@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -11,9 +12,13 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		MainMenu menu=new MainMenu(stage);
-		stage.setScene(menu.getscene());
+		stage.setTitle("Snake vs Blocks");
+		Pane pane=new Pane();
+		Scene scene=new Scene(pane,500,650);
+		MainMenu menu=new MainMenu(scene);
+		stage.setScene(scene);
 		stage.show();
+		
 		
 	}
 
