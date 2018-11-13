@@ -119,6 +119,17 @@ public class Gameplay {
 		t.start();
 		}
 	}
+	public void generateshield() {
+		Token shield = new Shield();
+		pane.getChildren().add(shield.gettoken());
+		AnimationTimer t = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+3);
+			}
+		};
+		t.start();
+	}
 	public void generatemagnet() {
 		Token magnet=new Magnet();
 		pane.getChildren().add(magnet.gettoken());
@@ -139,8 +150,11 @@ public class Gameplay {
 				// TODO Auto-generated method stub
 				time=time+1;
 				temp=temp+1;
-				if(time==95)
+				if(time==95){
 					generateballs();
+					generateshield();
+				}
+
 				if(temp==430) 
 					generatemagnet();
 				if(temp==15*150)
