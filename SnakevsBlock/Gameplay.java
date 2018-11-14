@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -21,12 +22,12 @@ public class Gameplay {
 	private Pane pane;
 	public Gameplay(Scene scene){
 		pane=new Pane();
-		back=new Button("back");
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		snake=new Snake();
 		makesnake();
 		movesnake(scene);
-		screenbuild();
+		screenbuild(scene);
+		pane.getChildren().remove(snake);
 		scene.setRoot(pane);
 		
 	}
@@ -44,25 +45,24 @@ public class Gameplay {
 			public void handle(KeyEvent event) {
 				// TODO Auto-generated method stub
 				 switch (event.getCode()) {
-		         	case RIGHT:
-		         		for(int i=0;i<snake.getlength();i++) {
-		         			if(snake.getb(i).gettoken().getLayoutX()+50<=500) {
-		         				snake.getb(i).gettoken().setLayoutX(snake.getb(i).gettoken().getLayoutX() + 50);
-		         				snake.getb(i).gettext().setX(snake.getb(i).gettext().getX()+50);
-		         			}
-		         		}
-		         		break;
-		         	case LEFT:  
-		         		for(int i=0;i<snake.getlength();i++) {
-		         			if(snake.getb(i).gettoken().getLayoutX()-50>=0) {
-		         				snake.getb(i).gettoken().setLayoutX(snake.getb(i).gettoken().getLayoutX() - 50);
-		         				snake.getb(i).gettext().setX(snake.getb(i).gettext().getX()-50);
-		         			}
-		         		}
-		        	  	break;
 		         	case HOME:
 		         		MainMenu menu=new MainMenu(scene);
 		        }
+			}
+			
+		});
+		pane.setOnMouseDragged(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				if(event.getX()>10 && event.getX()<490) {
+					for(int i=0;i<snake.getlength();i++) {
+						//ball.ball.setCenterX(event.getX());
+						snake.getb(i).gettoken().setLayoutX(event.getX());
+						snake.getb(i).gettext().setLayoutX(event.getX()-250);
+					}
+				}
 			}
 			
 		});
@@ -79,6 +79,15 @@ public class Gameplay {
 			public void handle(long now) {
 				b.gettoken().setLayoutY(b.gettoken().getLayoutY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
+				if(b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()==snake.getsnake().get(0).gettoken().getLayoutX()) {
+					pane.getChildren().remove(b.gettoken());
+					pane.getChildren().remove(b.gettext());
+				}
+				if(b.gettoken().getLayoutY()>655) {
+					pane.getChildren().remove(b.gettoken());
+					pane.getChildren().remove(b.gettext());
+				}
+				
 			}
 		};
 		t.start();
@@ -98,6 +107,16 @@ public class Gameplay {
 			public void handle(long now) {
 				b.getblock().setY(b.getblock().getY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
+				if(b.getblock().getY()>=400 && b.getblock().getY()<=410 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
+					pane.getChildren().remove(b.getblock());
+					pane.getChildren().remove(b.gettext());
+				}
+				if(b.getblock().getY()>655) {
+					pane.getChildren().remove(b.getblock());
+					pane.getChildren().remove(b.gettext());
+				}
+				
+				
 			}
 		};
 		t.start();
@@ -114,47 +133,61 @@ public class Gameplay {
 			@Override
 			public void handle(long now) {
 				wall.getwall().setY(wall.getwall().getY()+3);
+				if(wall.getwall().getY()>655) {
+					pane.getChildren().remove(wall.getwall());
+				}
+		
 			}
 		};
 		t.start();
 		}
-	}
-	public void generateshield() {
-		Token shield = new Shield();
-		pane.getChildren().add(shield.gettoken());
-		AnimationTimer t = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+3);
-			}
-		};
-		t.start();
 	}
 	public void generatemagnet() {
 		Token magnet=new Magnet();
 		pane.getChildren().add(magnet.gettoken());
 		AnimationTimer t=new AnimationTimer() {
-		@Override
-		public void handle(long now) {
-			magnet.gettoken().setLayoutY(magnet.gettoken().getLayoutY()+3);
-		}
+			@Override
+			public void handle(long now) {
+				magnet.gettoken().setLayoutY(magnet.gettoken().getLayoutY()+3);
+				if(magnet.gettoken().getLayoutY()>655) {
+					pane.getChildren().remove(magnet.gettoken());
+				}
+				
+			}
 		};
 		t.start();
 	}
-	public void screenbuild() {
+	public void generateshield() {
+		Token shield=new Sheild();
+		pane.getChildren().add(shield.gettoken());
+		AnimationTimer t=new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+3);
+				if(shield.gettoken().getLayoutY()>655) {
+					pane.getChildren().remove(shield.gettoken());
+				}
+			}
+		};
+		t.start();
+	}
+	public void screenbuild(Scene scene) {
 	
 		AnimationTimer timer=new AnimationTimer() {
 			int temp=0;
+			int temp2=0;
 			@Override
 			public void handle(long now) {
 				// TODO Auto-generated method stub
 				time=time+1;
 				temp=temp+1;
-				if(time==95){
+				temp2=temp2+1;
+				if(time==95)
 					generateballs();
+				if(temp2==95)
 					generateshield();
-				}
-
+				if(temp2==150*10)
+					temp2=0;
 				if(temp==430) 
 					generatemagnet();
 				if(temp==15*150)
