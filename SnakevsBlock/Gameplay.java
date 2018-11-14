@@ -3,6 +3,7 @@ import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
@@ -20,10 +21,13 @@ public class Gameplay {
 	private Button back;
 	private Snake snake;
 	private Pane pane;
+	private static int score;
 	public Gameplay(Scene scene){
 		pane=new Pane();
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		snake=new Snake();
+		score=0;
+		addscore();
 		makesnake();
 		movesnake(scene);
 		screenbuild(scene);
@@ -31,7 +35,13 @@ public class Gameplay {
 		scene.setRoot(pane);
 		
 	}
-
+	public void addscore() {
+		Button score1 = new Button("Score - "+score);
+		score1.setMinSize(100, 30);
+		score1.setAlignment(Pos.BASELINE_LEFT);
+		score1.setStyle("-fx-background-color: Yellow;");
+		pane.getChildren().addAll(score1);
+	}
 	public void makesnake() {
 		int n=snake.getlength();
 		for(int i=0;i<n;i++) {
@@ -109,6 +119,7 @@ public class Gameplay {
 				b.gettext().setY(b.gettext().getY()+3);
 				if(b.getblock().getY()>=400 && b.getblock().getY()<=410 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
 					pane.getChildren().remove(b.getblock());
+					score = score + b.getx();
 					pane.getChildren().remove(b.gettext());
 				}
 				if(b.getblock().getY()>655) {
@@ -158,7 +169,7 @@ public class Gameplay {
 		t.start();
 	}
 	public void generateshield() {
-		Token shield=new Sheild();
+		Token shield=new Shield();
 		pane.getChildren().add(shield.gettoken());
 		AnimationTimer t=new AnimationTimer() {
 			@Override
