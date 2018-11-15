@@ -3,7 +3,6 @@ import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
@@ -14,33 +13,32 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 public class Gameplay {
 	private double time;
+
+	private int currentscore;
 	private MainMenu menu;
-	private Button back;
 	private Snake snake;
 	private Pane pane;
-	private static int score;
+	private Button score;
 	public Gameplay(Scene scene){
 		pane=new Pane();
+		currentscore=0;
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		snake=new Snake();
-		score=0;
-		addscore();
 		makesnake();
 		movesnake(scene);
 		screenbuild(scene);
+		addscore();
 		pane.getChildren().remove(snake);
 		scene.setRoot(pane);
-		
 	}
 	public void addscore() {
-		Button score1 = new Button("Score - "+score);
-		score1.setMinSize(100, 30);
-		score1.setAlignment(Pos.BASELINE_LEFT);
-		score1.setStyle("-fx-background-color: Yellow;");
-		pane.getChildren().addAll(score1);
+		score=new Button("score"+" "+Integer.toString(currentscore));
+		score.setStyle("-fx-background-color: Yellow;");
+		pane.getChildren().add(score);
 	}
 	public void makesnake() {
 		int n=snake.getlength();
@@ -67,8 +65,7 @@ public class Gameplay {
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
 				if(event.getX()>10 && event.getX()<490) {
-					for(int i=0;i<snake.getlength();i++) {
-						//ball.ball.setCenterX(event.getX());
+					for(int i=0;i<snake.getsnake().size();i++) {
 						snake.getb(i).gettoken().setLayoutX(event.getX());
 						snake.getb(i).gettext().setLayoutX(event.getX()-250);
 					}
@@ -89,9 +86,10 @@ public class Gameplay {
 			public void handle(long now) {
 				b.gettoken().setLayoutY(b.gettoken().getLayoutY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
-				if(b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()==snake.getsnake().get(0).gettoken().getLayoutX()) {
+				if(b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()-20<snake.getsnake().get(0).gettoken().getLayoutX() && b.gettoken().getLayoutX()+20>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 					pane.getChildren().remove(b.gettoken());
 					pane.getChildren().remove(b.gettext());
+					snake.addball(b.getvalue(),pane);
 				}
 				if(b.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(b.gettoken());
@@ -103,7 +101,7 @@ public class Gameplay {
 		t.start();
 		}
 	}
-	public void generateblocks() {
+	public void generateblocks(Scene scene) {
 		Random rand=new Random();
 		int n=rand.nextInt(3)+2;
 		//ArrayList<Block> blocks=new ArrayList<Block>();
@@ -117,10 +115,17 @@ public class Gameplay {
 			public void handle(long now) {
 				b.getblock().setY(b.getblock().getY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
-				if(b.getblock().getY()>=400 && b.getblock().getY()<=410 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
+				if(b.getblock().getY()>=400 && b.getblock().getY()<=402 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
 					pane.getChildren().remove(b.getblock());
-					score = score + b.getx();
 					pane.getChildren().remove(b.gettext());
+					currentscore=currentscore+b.getvalue();
+					score.setText("score"+" "+Integer.toString(currentscore));
+					try {
+						snake.removeball(b.getvalue(), pane);
+					}
+					catch(Exception e) {
+						System.exit(0);
+					}
 				}
 				if(b.getblock().getY()>655) {
 					pane.getChildren().remove(b.getblock());
@@ -160,6 +165,10 @@ public class Gameplay {
 			@Override
 			public void handle(long now) {
 				magnet.gettoken().setLayoutY(magnet.gettoken().getLayoutY()+3);
+				if(magnet.gettoken().getLayoutY()==480 && magnet.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() && magnet.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+					pane.getChildren().remove(magnet.gettoken());
+					pane.getChildren().remove(magnet.gettext());
+				}
 				if(magnet.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(magnet.gettoken());
 				}
@@ -169,12 +178,16 @@ public class Gameplay {
 		t.start();
 	}
 	public void generateshield() {
-		Token shield=new Shield();
+		Token shield=new Sheild();
 		pane.getChildren().add(shield.gettoken());
 		AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+3);
+				if(shield.gettoken().getLayoutY()==480 && shield.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() &&	shield.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+					pane.getChildren().remove(shield.gettoken());
+					pane.getChildren().remove(shield.gettext());
+				}
 				if(shield.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(shield.gettoken());
 				}
@@ -206,10 +219,9 @@ public class Gameplay {
 				if(time==85)
 					generatewalls();
 				if(time==150) {
-					generateblocks();
+					generateblocks(scene);
 					time=0;
-				}
-				
+				}	
 			}
 			
 		};

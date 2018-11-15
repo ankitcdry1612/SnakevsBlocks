@@ -2,6 +2,7 @@ import java.util.Random;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Block {
@@ -44,6 +45,9 @@ public class Block {
 	}
 	public int getx() {
 		return x/100;
+	}
+	public int getvalue() {
+		return value;
 	}
 	public void setx() {
 		Random rand=new Random();
