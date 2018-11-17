@@ -1,7 +1,9 @@
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.SequentialTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,14 +14,14 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class Gameplay {
 	private double time;
-
+	private int gameover;
 	private int currentscore;
-	private MainMenu menu;
 	private Snake snake;
 	private Pane pane;
 	private Button score;
@@ -64,7 +66,7 @@ public class Gameplay {
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
-				if(event.getX()>10 && event.getX()<490) {
+				if(event.getX()>10 && event.getX()<490 && gameover==0) {
 					for(int i=0;i<snake.getsnake().size();i++) {
 						snake.getb(i).gettoken().setLayoutX(event.getX());
 						snake.getb(i).gettext().setLayoutX(event.getX()-250);
@@ -76,16 +78,23 @@ public class Gameplay {
 	}
 	public void generateballs() {
 		Random rand=new Random();
-		int n=rand.nextInt(3)+1;
-		//ArrayList<Ball> ball=new ArrayList<Ball>();
+		int n=rand.nextInt(5);
+		ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int i=0; i<5; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
 		for(int i=0;i<n;i++) {
-			Token b=new Ball();
+			Token b=new Ball(list);
 			pane.getChildren().addAll(b.gettoken(),b.gettext());
 			AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				b.gettoken().setLayoutY(b.gettoken().getLayoutY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
+				if(gameover==1) {
+					this.stop();
+				}
 				if(b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()-20<snake.getsnake().get(0).gettoken().getLayoutX() && b.gettoken().getLayoutX()+20>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 					pane.getChildren().remove(b.gettoken());
 					pane.getChildren().remove(b.gettext());
@@ -103,29 +112,38 @@ public class Gameplay {
 	}
 	public void generateblocks(Scene scene) {
 		Random rand=new Random();
-		int n=rand.nextInt(3)+2;
-		//ArrayList<Block> blocks=new ArrayList<Block>();
-		//int[] x=new int[5];
+		int n=rand.nextInt(5)+1;
+		ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int i=0; i<5; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
 		
 		for(int i=0;i<n;i++) {
-			Block b=new Block();		
+			Block b=new Block(list);		
 			pane.getChildren().addAll(b.getblock(),b.gettext());
 			AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				b.getblock().setY(b.getblock().getY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
-				if(b.getblock().getY()>=400 && b.getblock().getY()<=402 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
+				if(gameover==0 && b.getblock().getY()>=400 && b.getblock().getY()<=402 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
+					this.stop();
 					pane.getChildren().remove(b.getblock());
 					pane.getChildren().remove(b.gettext());
 					currentscore=currentscore+b.getvalue();
 					score.setText("score"+" "+Integer.toString(currentscore));
+					
+					
 					try {
 						snake.removeball(b.getvalue(), pane);
 					}
 					catch(Exception e) {
-						System.exit(0);
+						gameover=1;
 					}
+				}
+				if(gameover==1) {
+					this.stop();
 				}
 				if(b.getblock().getY()>655) {
 					pane.getChildren().remove(b.getblock());
@@ -136,12 +154,12 @@ public class Gameplay {
 			}
 		};
 		t.start();
+		
 		}	
 	}
 	public void generatewalls() {
 		Random rand=new Random();
 		int n=rand.nextInt(3)+1;
-		//ArrayList<Ball> ball=new ArrayList<Ball>();
 		for(int i=0;i<n;i++) {
 			Walls wall=new Walls();
 			pane.getChildren().addAll(wall.getwall());
@@ -151,6 +169,9 @@ public class Gameplay {
 				wall.getwall().setY(wall.getwall().getY()+3);
 				if(wall.getwall().getY()>655) {
 					pane.getChildren().remove(wall.getwall());
+				}
+				if(gameover==1){
+					this.stop();
 				}
 		
 			}
@@ -172,7 +193,9 @@ public class Gameplay {
 				if(magnet.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(magnet.gettoken());
 				}
-				
+				if(gameover==1) {
+					this.stop();
+				}
 			}
 		};
 		t.start();
@@ -191,6 +214,9 @@ public class Gameplay {
 				if(shield.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(shield.gettoken());
 				}
+				if(gameover==1) {
+					this.stop();
+				}
 			}
 		};
 		t.start();
@@ -206,7 +232,10 @@ public class Gameplay {
 				time=time+1;
 				temp=temp+1;
 				temp2=temp2+1;
-				if(time==95)
+				if(gameover==1) {
+					this.stop();
+				}
+				if(time==95) 
 					generateballs();
 				if(temp2==95)
 					generateshield();
@@ -226,5 +255,6 @@ public class Gameplay {
 			
 		};
 		timer.start();
+		
 	}
 }

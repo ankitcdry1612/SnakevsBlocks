@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.scene.paint.Color;
@@ -11,10 +12,11 @@ public class Block {
 	private int y;
 	private int value;
 	private Text text;
-	public Block(){
+	public Block(ArrayList<Integer> list){
 		block=new Rectangle();
 		Random rand=new Random();
-		x=rand.nextInt(5)*100;
+		x=list.get(0)*100;
+		list.remove(0);
 		y=-100;
 		block.setX(x);
 		block.setY(y);
