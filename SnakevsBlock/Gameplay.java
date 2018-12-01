@@ -25,24 +25,45 @@ public class Gameplay {
 	private Snake snake;
 	private Pane pane;
 	private Button score;
+	private Button restart;
+	private Button home;
 	private int sheild;
 	private int destroy;
-	private int ismagnet;
-	private int speed;
 	double l1=10;
 	double r1=490;;
 	public Gameplay(Scene scene){
 		pane=new Pane();
-		speed=4;
 		currentscore=0;
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		snake=new Snake();
 		makesnake();
 		movesnake(scene);
-		screenbuild(scene);
+		restart(scene);
 		addscore();
+		home(scene);
+		screenbuild(scene);
 		pane.getChildren().remove(snake);
 		scene.setRoot(pane);
+	}
+	public void restart(Scene scene) {
+		restart = new Button("restart");
+		restart.setStyle("-fx-background-color: Yellow;");
+		restart.setLayoutX(435.0);
+		restart.setLayoutY(0);
+		restart.setOnAction(e ->{
+			Gameplay gameplay = new Gameplay(scene);
+		});
+		pane.getChildren().add(restart);
+	}
+	public void home(Scene scene) {
+		home = new Button("home");
+		home.setStyle("-fx-background-color: Yellow;");
+		home.setLayoutX(210.0);
+		home.setLayoutY(0);
+		home.setOnAction(e -> {
+			MainMenu menu = new MainMenu(scene);
+		});
+		pane.getChildren().add(home);
 	}
 	public void addscore() {
 		score=new Button("score"+" "+Integer.toString(currentscore));
