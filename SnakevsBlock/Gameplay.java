@@ -25,6 +25,10 @@ public class Gameplay {
 	private Snake snake;
 	private Pane pane;
 	private Button score;
+	private int sheild;
+	private int destroy;
+	double l1=10;
+	double r1=490;;
 	public Gameplay(Scene scene){
 		pane=new Pane();
 		currentscore=0;
@@ -50,6 +54,7 @@ public class Gameplay {
 		}
 	}
 	public void movesnake(Scene scene) {
+		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>(){
 			@Override
 			public void handle(KeyEvent event) {
@@ -62,14 +67,15 @@ public class Gameplay {
 			
 		});
 		pane.setOnMouseDragged(new EventHandler<MouseEvent>() {
-
+			
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
-				if(event.getX()>10 && event.getX()<490 && gameover==0) {
+				if(event.getX()>l1 && event.getX()<r1 && gameover==0) {
 					for(int i=0;i<snake.getsnake().size();i++) {
 						snake.getb(i).gettoken().setLayoutX(event.getX());
 						snake.getb(i).gettext().setLayoutX(event.getX()-250);
+						
 					}
 				}
 			}
@@ -127,30 +133,36 @@ public class Gameplay {
 			public void handle(long now) {
 				b.getblock().setY(b.getblock().getY()+3);
 				b.gettext().setY(b.gettext().getY()+3);
-				if(gameover==0 && b.getblock().getY()>=400 && b.getblock().getY()<=402 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
-					this.stop();
+				if(destroy>0) {
 					pane.getChildren().remove(b.getblock());
 					pane.getChildren().remove(b.gettext());
 					currentscore=currentscore+b.getvalue();
 					score.setText("score"+" "+Integer.toString(currentscore));
-					
-					
-					try {
-						snake.removeball(b.getvalue(), pane);
+				}
+				else if(pane.getChildren().contains(b.getblock())){
+					if(gameover==0 && b.getblock().getY()>=400 && b.getblock().getY()<=402 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
+						this.stop();
+						pane.getChildren().remove(b.getblock());
+						pane.getChildren().remove(b.gettext());
+						currentscore=currentscore+b.getvalue();
+						score.setText("score"+" "+Integer.toString(currentscore));
+						if(sheild==0) {
+							try {
+								snake.removeball(b.getvalue(), pane);
+							}
+							catch(Exception e) {
+								gameover=1;
+							}
+						}
 					}
-					catch(Exception e) {
-						gameover=1;
+					if(b.getblock().getY()>655) {
+						pane.getChildren().remove(b.getblock());
+						pane.getChildren().remove(b.gettext());
 					}
 				}
 				if(gameover==1) {
 					this.stop();
 				}
-				if(b.getblock().getY()>655) {
-					pane.getChildren().remove(b.getblock());
-					pane.getChildren().remove(b.gettext());
-				}
-				
-				
 			}
 		};
 		t.start();
@@ -167,7 +179,15 @@ public class Gameplay {
 			@Override
 			public void handle(long now) {
 				wall.getwall().setY(wall.getwall().getY()+3);
+				if(gameover==0 && wall.getwall().getY()>300 && snake.getposition()-wall.getwall().getX()>0 && snake.getposition()-wall.getwall().getX()<15) {
+					l1=snake.getposition();
+				}
+				if(gameover==0 && wall.getwall().getY()>300 && snake.getposition()-wall.getwall().getX()<0 && snake.getposition()-wall.getwall().getX()>-10) {
+					r1=snake.getposition();
+				}
 				if(wall.getwall().getY()>655) {
+					l1=10;
+					r1=490;
 					pane.getChildren().remove(wall.getwall());
 				}
 				if(gameover==1){
@@ -210,9 +230,32 @@ public class Gameplay {
 				if(shield.gettoken().getLayoutY()==480 && shield.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() &&	shield.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 					pane.getChildren().remove(shield.gettoken());
 					pane.getChildren().remove(shield.gettext());
+					sheild=1;
 				}
 				if(shield.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(shield.gettoken());
+				}
+				if(gameover==1) {
+					this.stop();
+				}
+			}
+		};
+		t.start();
+	}
+	public void generatedestroyer() {
+		Token destroyer=new Destroyer();
+		pane.getChildren().add(destroyer.gettoken());
+		AnimationTimer t=new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				destroyer.gettoken().setLayoutY(destroyer.gettoken().getLayoutY()+3);
+				if(destroyer.gettoken().getLayoutY()==480 && destroyer.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() && destroyer.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+					pane.getChildren().remove(destroyer.gettoken());
+					pane.getChildren().remove(destroyer.gettext());
+					destroy=1;
+				}
+				if(destroyer.gettoken().getLayoutY()>655) {
+					pane.getChildren().remove(destroyer.gettoken());
 				}
 				if(gameover==1) {
 					this.stop();
@@ -226,19 +269,40 @@ public class Gameplay {
 		AnimationTimer timer=new AnimationTimer() {
 			int temp=0;
 			int temp2=0;
+			int swipe=0;
 			@Override
 			public void handle(long now) {
 				// TODO Auto-generated method stub
 				time=time+1;
 				temp=temp+1;
 				temp2=temp2+1;
+				if(sheild>0) {
+					sheild++;
+					snake.getb(0).gettoken().setFill(Color.ORANGE);
+				}
+				if(sheild==400) {
+					sheild=0;
+					snake.getb(0).gettoken().setFill(Color.YELLOW);
+				}
+				if(destroy>0)
+					destroy++;
+				if(destroy==2)
+					destroy=0;
 				if(gameover==1) {
 					this.stop();
 				}
 				if(time==95) 
 					generateballs();
-				if(temp2==95)
-					generateshield();
+				if(temp2==95) {
+					if(swipe==0) {
+						generateshield();
+						swipe=1;
+					}
+					else {
+						generatedestroyer();
+						swipe=0;
+					}
+				}	
 				if(temp2==150*10)
 					temp2=0;
 				if(temp==430) 
@@ -252,7 +316,6 @@ public class Gameplay {
 					time=0;
 				}	
 			}
-			
 		};
 		timer.start();
 		

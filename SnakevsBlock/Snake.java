@@ -64,4 +64,8 @@ public class Snake {
 		}
 		snake.get(0).gettext().setText(Integer.toString(length));
 	}
+	public double getposition() {
+		return snake.get(0).gettoken().getLayoutX();
+		
+	}
 }
