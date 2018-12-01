@@ -27,10 +27,13 @@ public class Gameplay {
 	private Button score;
 	private int sheild;
 	private int destroy;
+	private int ismagnet;
+	private int speed;
 	double l1=10;
 	double r1=490;;
 	public Gameplay(Scene scene){
 		pane=new Pane();
+		speed=4;
 		currentscore=0;
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		snake=new Snake();
@@ -96,21 +99,27 @@ public class Gameplay {
 			AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				b.gettoken().setLayoutY(b.gettoken().getLayoutY()+3);
-				b.gettext().setY(b.gettext().getY()+3);
-				if(gameover==1) {
-					this.stop();
-				}
-				if(b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()-20<snake.getsnake().get(0).gettoken().getLayoutX() && b.gettoken().getLayoutX()+20>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+				b.gettoken().setLayoutY(b.gettoken().getLayoutY()+speed);
+				b.gettext().setY(b.gettext().getY()+speed);
+				if(ismagnet>0 && pane.getChildren().contains(b.gettoken()) && gameover==0 && b.gettoken().getLayoutY()>250 && b.gettoken().getLayoutX()-snake.getposition()<150 && b.gettoken().getLayoutX()-snake.getposition()>-150) {
 					pane.getChildren().remove(b.gettoken());
 					pane.getChildren().remove(b.gettext());
 					snake.addball(b.getvalue(),pane);
+				}
+				if(pane.getChildren().contains(b.gettoken())) {
+					if(gameover==0 && b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()-20<snake.getsnake().get(0).gettoken().getLayoutX() && b.gettoken().getLayoutX()+20>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+						pane.getChildren().remove(b.gettoken());
+						pane.getChildren().remove(b.gettext());
+						snake.addball(b.getvalue(),pane);
+					}
 				}
 				if(b.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(b.gettoken());
 					pane.getChildren().remove(b.gettext());
 				}
-				
+				if(gameover==1) {
+					this.stop();
+				}
 			}
 		};
 		t.start();
@@ -131,9 +140,9 @@ public class Gameplay {
 			AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				b.getblock().setY(b.getblock().getY()+3);
-				b.gettext().setY(b.gettext().getY()+3);
-				if(destroy>0) {
+				b.getblock().setY(b.getblock().getY()+speed);
+				b.gettext().setY(b.gettext().getY()+speed);
+				if(destroy>0 && pane.getChildren().contains(b.getblock())) {
 					pane.getChildren().remove(b.getblock());
 					pane.getChildren().remove(b.gettext());
 					currentscore=currentscore+b.getvalue();
@@ -178,7 +187,7 @@ public class Gameplay {
 			AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				wall.getwall().setY(wall.getwall().getY()+3);
+				wall.getwall().setY(wall.getwall().getY()+speed);
 				if(gameover==0 && wall.getwall().getY()>300 && snake.getposition()-wall.getwall().getX()>0 && snake.getposition()-wall.getwall().getX()<15) {
 					l1=snake.getposition();
 				}
@@ -205,10 +214,11 @@ public class Gameplay {
 		AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				magnet.gettoken().setLayoutY(magnet.gettoken().getLayoutY()+3);
-				if(magnet.gettoken().getLayoutY()==480 && magnet.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() && magnet.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+				magnet.gettoken().setLayoutY(magnet.gettoken().getLayoutY()+speed);
+				if(magnet.gettoken().getLayoutY()>=480 && magnet.gettoken().getLayoutY()<=482 && magnet.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() && magnet.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 					pane.getChildren().remove(magnet.gettoken());
 					pane.getChildren().remove(magnet.gettext());
+					ismagnet=1;
 				}
 				if(magnet.gettoken().getLayoutY()>655) {
 					pane.getChildren().remove(magnet.gettoken());
@@ -226,8 +236,8 @@ public class Gameplay {
 		AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+3);
-				if(shield.gettoken().getLayoutY()==480 && shield.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() &&	shield.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+speed);
+				if(shield.gettoken().getLayoutY()>=480 && shield.gettoken().getLayoutY()<=482 && shield.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() &&	shield.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 					pane.getChildren().remove(shield.gettoken());
 					pane.getChildren().remove(shield.gettext());
 					sheild=1;
@@ -248,8 +258,8 @@ public class Gameplay {
 		AnimationTimer t=new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				destroyer.gettoken().setLayoutY(destroyer.gettoken().getLayoutY()+3);
-				if(destroyer.gettoken().getLayoutY()==480 && destroyer.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() && destroyer.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+				destroyer.gettoken().setLayoutY(destroyer.gettoken().getLayoutY()+speed);
+				if(destroyer.gettoken().getLayoutY()>=480 && destroyer.gettoken().getLayoutY()<=482 && destroyer.gettoken().getLayoutX()-30<snake.getsnake().get(0).gettoken().getLayoutX() && destroyer.gettoken().getLayoutX()+30>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 					pane.getChildren().remove(destroyer.gettoken());
 					pane.getChildren().remove(destroyer.gettext());
 					destroy=1;
@@ -283,6 +293,12 @@ public class Gameplay {
 				if(sheild==400) {
 					sheild=0;
 					snake.getb(0).gettoken().setFill(Color.YELLOW);
+				}
+				if(ismagnet>0) {
+					ismagnet++;
+				}
+				if(ismagnet==400) {
+					ismagnet=0;
 				}
 				if(destroy>0)
 					destroy++;

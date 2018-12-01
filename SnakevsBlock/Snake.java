@@ -8,7 +8,7 @@ import javafx.scene.text.Text;
 public class Snake {
 	private ArrayList<Token> snake; 
 	private Token ball;
-	int length;
+	private int length;
 	private int x;
 	private int y;
 	public Snake() {
