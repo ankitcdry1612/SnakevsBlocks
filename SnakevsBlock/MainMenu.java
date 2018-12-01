@@ -32,14 +32,23 @@ public class MainMenu {
 		help=new Button("Help");
 		setup(scene);
 		help(scene);
+		exit(scene);
 		scene.setRoot(pane);
 	}
 	public void exit(Scene scene) {
 		Pane exitpane = new Pane();
 		Button yes = new Button("Yes");
 		Button no = new Button("No");
+		Text sure=new Text("Are you sure?");
+		sure.setX(100);
+		sure.setY(100);
 		yes.setStyle("-fx-background-color: Red;");
+		yes.setLayoutY(375);
+		yes.setLayoutX(200);
 		no.setStyle("-fx-background-color: Green;");
+		no.setLayoutY(375);
+		no.setLayoutX(400);
+		exitpane.getChildren().addAll(yes,no,sure);
 		exit.setOnAction(e ->{
 			scene.setRoot(exitpane);
 			yes.setOnAction(e1 -> {
@@ -138,9 +147,9 @@ public class MainMenu {
 		start.setOnAction(e ->{
 			game=new Gameplay(scene);
 		});
-		exit.setOnAction(e ->{
+		/*exit.setOnAction(e ->{
 			System.exit(0);
-		});
+		});*/
 		
 	}
 	public void leaderboard(Scene scene) {
