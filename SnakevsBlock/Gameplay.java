@@ -29,10 +29,13 @@ public class Gameplay {
 	private Button home;
 	private int sheild;
 	private int destroy;
+	private int ismagnet;
+	private int speed;
 	double l1=10;
-	double r1=490;;
+	double r1=490;
 	public Gameplay(Scene scene){
 		pane=new Pane();
+		speed=4;
 		currentscore=0;
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		snake=new Snake();
