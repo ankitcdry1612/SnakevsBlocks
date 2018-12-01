@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -6,6 +8,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -25,6 +28,7 @@ public class MainMenu {
 		exit=new Button("Exit");
 		resume=new Button("Resume");
 		leaderboard=new Button("Leaderboard");
+		leaderboard(scene);
 		help=new Button("Help");
 		setup(scene);
 		help(scene);
@@ -38,6 +42,7 @@ public class MainMenu {
 		image2.setFitHeight(650.0);
 		image2.setFitWidth(500.0);
 		Button back = new Button("Back");
+		back.setStyle("-fx-background-color: Red;");
 		Text text1 = new Text();
 		Text text2 = new Text();
 		Text text3 = new Text();
@@ -126,6 +131,90 @@ public class MainMenu {
 			System.exit(0);
 		});
 		
+	}
+	public void leaderboard(Scene scene) {
+		Rectangle player1 = new Rectangle(500,50);
+		Rectangle player2 = new Rectangle(500,50);
+		Rectangle player3 = new Rectangle(500,50);
+		Rectangle player4 = new Rectangle(500,50);
+		Rectangle player5 = new Rectangle(500,50);
+		Rectangle player6 = new Rectangle(500,50);
+		Rectangle player7 = new Rectangle(500,50);
+		Rectangle player8 = new Rectangle(500,50);
+		Rectangle player9 = new Rectangle(500,50);
+		Rectangle player10 = new Rectangle(500,50);
+		player1.setTranslateX(0);
+		player1.setTranslateY(55);
+		player2.setTranslateX(0);
+		player2.setTranslateY(115);
+		player3.setTranslateX(0);
+		player3.setTranslateY(175);
+		player4.setTranslateX(0);
+		player4.setTranslateY(235);
+		player5.setTranslateX(0);
+		player5.setTranslateY(295);
+		player6.setTranslateX(0);
+		player6.setTranslateY(355);
+		player7.setTranslateX(0);
+		player7.setTranslateY(415);
+		player8.setTranslateX(0);
+		player8.setTranslateY(475);
+		player9.setTranslateX(0);
+		player9.setTranslateY(535);
+		player10.setTranslateX(0);
+		player10.setTranslateY(595);
+		player1.setFill(Color.YELLOW);
+		player2.setFill(Color.YELLOW);
+		player3.setFill(Color.YELLOW);
+		player4.setFill(Color.YELLOW);
+		player5.setFill(Color.YELLOW);
+		player6.setFill(Color.YELLOW);
+		player7.setFill(Color.YELLOW);
+		player8.setFill(Color.YELLOW);
+		player9.setFill(Color.YELLOW);
+		player10.setFill(Color.YELLOW);
+		Text score1 = new Text("Player1 score is : " + 0);
+		Text score2 = new Text("Player2 score is : " + 0);
+		Text score3 = new Text("Player3 score is : " + 0);
+		Text score4 = new Text("Player4 score is : " + 0);
+		Text score5 = new Text("Player5 score is : " + 0);
+		Text score6 = new Text("Player6 score is : " + 0);
+		Text score7 = new Text("Player7 score is : " + 0);
+		Text score8 = new Text("Player8 score is : " + 0);
+		Text score9 = new Text("Player9 score is : " + 0);
+		Text score10 = new Text("Player10 score is : " + 0);
+		score1.setTranslateX(50);
+		score1.setTranslateY(85);
+		score2.setTranslateX(50);
+		score2.setTranslateY(145);
+		score3.setTranslateX(50);
+		score3.setTranslateY(205);
+		score4.setTranslateX(50);
+		score4.setTranslateY(265);
+		score5.setTranslateX(50);
+		score5.setTranslateY(325);
+		score6.setTranslateX(50);
+		score6.setTranslateY(385);
+		score7.setTranslateX(50);
+		score7.setTranslateY(445);
+		score8.setTranslateX(50);
+		score8.setTranslateY(505);
+		score9.setTranslateX(50);
+		score9.setTranslateY(565);
+		score10.setTranslateX(50);
+		score10.setTranslateY(625);
+		Pane ldboard = new Pane();
+//		pane.setTitle("ScoreBoard");
+		pane.setStyle("-fx-background-color: Yellow;");
+		Button back = new Button("back");
+		back.setStyle("-fx-background-color: Red;");
+		ldboard.getChildren().addAll(player1,player2,player3,player4,player5,player6,player7,player8,player9,player10,back,score1,score2,score3,score4,score5,score6,score7,score8,score9,score10);
+		leaderboard.setOnAction(e -> {
+			scene.setRoot(ldboard);
+			back.setOnAction(e1 -> {
+				scene.setRoot(pane);
+			});
+		});
 	}
 	public Pane getpane() {
 		return pane;
