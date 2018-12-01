@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -64,7 +65,11 @@ public class Gameplay {
 		home.setLayoutX(210.0);
 		home.setLayoutY(0);
 		home.setOnAction(e -> {
-			MainMenu menu = new MainMenu(scene);
+			try {
+				MainMenu menu=new MainMenu(scene);
+				} catch (IOException error) {
+				error.printStackTrace();
+				}
 		});
 		pane.getChildren().add(home);
 	}
@@ -88,7 +93,11 @@ public class Gameplay {
 				// TODO Auto-generated method stub
 				 switch (event.getCode()) {
 		         	case HOME:
-		         		MainMenu menu=new MainMenu(scene);
+		         		try {
+		         			MainMenu menu=new MainMenu(scene);
+		         			} catch (IOException e) {
+		         			e.printStackTrace();
+		         			}
 		        }
 			}
 			

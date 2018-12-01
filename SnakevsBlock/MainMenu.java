@@ -1,3 +1,11 @@
+import java.awt.Font;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Scanner;
 
 import javafx.scene.Scene;
@@ -9,10 +17,12 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MainMenu {
+public class MainMenu implements Serializable {
 	private Pane pane;
 	private Button start;
 	private Button exit;
@@ -20,7 +30,7 @@ public class MainMenu {
 	private Button leaderboard;
 	private Button help;
 	private Gameplay game;
-	public MainMenu(Scene scene) {
+	public MainMenu(Scene scene) throws IOException {
 		pane=new Pane();
 		
 		pane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
@@ -35,29 +45,52 @@ public class MainMenu {
 		exit(scene);
 		scene.setRoot(pane);
 	}
-	public void exit(Scene scene) {
+	public void exit(Scene scene) throws IOException {
 		Pane exitpane = new Pane();
 		Button yes = new Button("Yes");
 		Button no = new Button("No");
 		Text sure=new Text("Are you sure?");
 		sure.setX(100);
 		sure.setY(100);
+		sure.setX(180);
+		sure.setY(300);
+//		sure.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 50));
 		yes.setStyle("-fx-background-color: Red;");
-		yes.setLayoutY(375);
-		yes.setLayoutX(200);
+		yes.setLayoutY(350);
+		yes.setLayoutX(130);
 		no.setStyle("-fx-background-color: Green;");
-		no.setLayoutY(375);
-		no.setLayoutX(400);
+		no.setLayoutY(350);
+		no.setLayoutX(280);
 		exitpane.getChildren().addAll(yes,no,sure);
 		exit.setOnAction(e ->{
 			scene.setRoot(exitpane);
 			yes.setOnAction(e1 -> {
-				System.exit(0);
+				try {
+					ObjectOutputStream writetofile = new ObjectOutputStream(new FileOutputStream("Game.txt"));
+					writetofile.writeObject(game);
+				}catch(IOException error){
+					error.getMessage();
+				}
+				finally {
+					System.exit(0);
+				}
 			});
 			no.setOnAction(e2 -> {
-				MainMenu main = new MainMenu(scene);
+				try {
+					MainMenu main = new MainMenu(scene);
+					} catch (IOException e3) {
+						e3.printStackTrace();
+					}
 			});
 		});
+	}
+	public void resume(Scene scene) throws FileNotFoundException, IOException, ClassNotFoundException {
+		ObjectInputStream readfile = new ObjectInputStream(new FileInputStream("game.txt"));
+		try {
+			game = (Gameplay) readfile.readObject();
+		}catch(Exception error) {
+			game = new Gameplay(scene);
+		}
 	}
 	public void help(Scene scene) {
 		Pane helppane=new Pane();

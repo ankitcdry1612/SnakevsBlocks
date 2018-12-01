@@ -1,9 +1,11 @@
+import java.io.Serializable;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Main extends Application implements Serializable {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
