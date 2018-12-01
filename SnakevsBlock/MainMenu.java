@@ -34,6 +34,22 @@ public class MainMenu {
 		help(scene);
 		scene.setRoot(pane);
 	}
+	public void exit(Scene scene) {
+		Pane exitpane = new Pane();
+		Button yes = new Button("Yes");
+		Button no = new Button("No");
+		yes.setStyle("-fx-background-color: Red;");
+		no.setStyle("-fx-background-color: Green;");
+		exit.setOnAction(e ->{
+			scene.setRoot(exitpane);
+			yes.setOnAction(e1 -> {
+				System.exit(0);
+			});
+			no.setOnAction(e2 -> {
+				MainMenu main = new MainMenu(scene);
+			});
+		});
+	}
 	public void help(Scene scene) {
 		Pane helppane=new Pane();
 		Image image3 = new Image("file:Help.jpeg");
@@ -89,11 +105,6 @@ public class MainMenu {
 			back.setOnAction(e1 -> {
 				scene.setRoot(pane);
 			});
-		});
-	}
-	public void exit() {
-		exit.setOnAction(e ->{
-			System.exit(0);
 		});
 	}
 	public void setup(Scene scene) {
