@@ -25,7 +25,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
+/**
+ * Below is the Gameplay class which is behaving as main game here.
+ * It is linked with the Main class and Mainmenu and all the other component of the Games.
+ * @author pradeep
+ *
+ */
 public class Gameplay {
 	private double time;
 	private int gameover;
@@ -43,6 +48,14 @@ public class Gameplay {
 	double l1=10;
 	double r1=490;
 	private Player player;
+	/**
+	 * Below is the parameterized constructor of the Gameplay class
+	 * @param scene , It is the scene on the which the game is operating.
+	 * @param player, This is the player, who is playing the game.
+	 * The constructor sets the speed of the snake, default as 4 unit.
+	 * It has the restart,home and score button over itself.
+	 * It initialize the score.
+	 */
 	public Gameplay(Scene scene,Player player,int isresume) {
 		pane=new Pane();
 		this.player=player;
@@ -91,10 +104,16 @@ public class Gameplay {
 		home(scene);
 		screenbuild(scene);
 		
-	}
+	}/**
+	 * Below is the method which starts the game.
+	 * @param scene , It takes the parameter on which the game should be operated.
+	 */
 	public void play(Scene scene) {
 		scene.setRoot(pane);
-	}
+	}/**
+	 * It restarts the game, sets the score to zero and length of snake as 4 units.
+	 * @param scene , It takes the parameter on which the game should be operated.
+	 */
 	public void restart(Scene scene) {
 		restart = new Button("restart");
 		restart.setStyle("-fx-background-color: Yellow;");
@@ -106,7 +125,10 @@ public class Gameplay {
 			gameplay.play(scene);
 		});
 		pane.getChildren().add(restart);
-	}
+	}/**
+	 * It takes the user to the home screen of the Game.
+	 * @param scene, The home screen of the game is the scene here.
+	 */
 	public void home(Scene scene) {
 		home = new Button("home");
 		home.setStyle("-fx-background-color: Yellow;");
@@ -139,21 +161,32 @@ public class Gameplay {
 		});
 		pane.getChildren().add(home);
 	}
+	/**
+	 * It increases the score of the player.
+	 */
 	public void addscore() {
 		score=new Button("score"+" "+Integer.toString(currentscore));
 		score.setStyle("-fx-background-color: Yellow;");
 		pane.getChildren().add(score);
-	}
+	}/**
+	 * It makes the snake of length 4 in starting.
+	 */
 	public void makesnake() {
 		int n=snake.getlength();
 		for(int i=0;i<n;i++) {
 			Token ball=snake.getsnake().get(i);
 			pane.getChildren().addAll(ball.gettoken(),ball.gettext());
 		}
-	}
+	}/**
+	 * It moves the snake on the left and right of the screen , with the help of mouse.
+	 * @param scene, The scene on which the game is being played.
+	 */
 	public void movesnake(Scene scene) {
 		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>(){
+			/**
+			 * This method sends the user to the homescreen, by just tapping on the home button of the keyboard.
+			 */
 			@Override
 			public void handle(KeyEvent event) {
 				// TODO Auto-generated method stub
@@ -165,7 +198,9 @@ public class Gameplay {
 			
 		});
 		pane.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			
+			/**
+			 * this method is used to operate snake using mouse.
+			 */
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
@@ -191,7 +226,9 @@ public class Gameplay {
 			}
 			
 		});
-	}
+	}/**
+	 * This method is used to generate the balls on the screen.
+	 */
 	public void generateballs() {
 		Random rand=new Random();
 		int n=rand.nextInt(4)+1;
@@ -231,7 +268,10 @@ public class Gameplay {
 		};
 		t.start();
 		}
-	}
+	}/**
+	 * This is used to generate the new blocks on the screen.
+	 * @param scene, This is the screen on the which the game is being operated.
+	 */
 	public void generateblocks(Scene scene) {
 		Random rand=new Random();
 		int n=rand.nextInt(3)+2;
@@ -245,6 +285,9 @@ public class Gameplay {
 			Block b=new Block(list);		
 			pane.getChildren().addAll(b.getblock(),b.gettext());
 			AnimationTimer t=new AnimationTimer() {
+				/**
+				 * This method is used to move blocks upside down on the screen.
+				 */
 			@Override
 			public void handle(long now) {
 				b.getblock().setY(b.getblock().getY()+speed);
@@ -290,6 +333,9 @@ public class Gameplay {
 		
 		}	
 	}
+	/**
+	 * This method is used to generate walls, which is acting as a restriction for the snake.
+	 */
 	public void generatewalls() {
 		Random rand=new Random();
 		int n=rand.nextInt(3)+1;
@@ -319,11 +365,17 @@ public class Gameplay {
 		};
 		t.start();
 		}
-	}
+	}/**
+	 * This is used to generate the magnet randomly on the screen.
+	 */
 	public void generatemagnet() {
 		Token magnet=new Magnet();
 		pane.getChildren().add(magnet.gettoken());
 		AnimationTimer t=new AnimationTimer() {
+			/**
+			 * This method is used to move the magnet upside down.
+			 * Magnet helps the snake to attract the balls and increase its length.
+			 */
 			@Override
 			public void handle(long now) {
 				magnet.gettoken().setLayoutY(magnet.gettoken().getLayoutY()+speed);
@@ -341,11 +393,17 @@ public class Gameplay {
 			}
 		};
 		t.start();
-	}
+	}/**
+	 * This method is used to generate the shield.
+	 * Shield helps the snake to escape, from all the restrictions and from all the problems in the game.
+	 */
 	public void generateshield() {
 		Token shield=new Sheild();
 		pane.getChildren().add(shield.gettoken());
 		AnimationTimer t=new AnimationTimer() {
+			/**
+			 * This method is used to send the shield upside down on the screen.
+			 */
 			@Override
 			public void handle(long now) {
 				shield.gettoken().setLayoutY(shield.gettoken().getLayoutY()+speed);
@@ -363,11 +421,18 @@ public class Gameplay {
 			}
 		};
 		t.start();
-	}
+	}/**
+	 * This method is used to generate the destroyer in the game.
+	 * Destroyer is used to clear the screen and add the score and increment the length of the snake.
+	 */	
 	public void generatedestroyer() {
 		Token destroyer=new Destroyer();
 		pane.getChildren().add(destroyer.gettoken());
 		AnimationTimer t=new AnimationTimer() {
+			/**
+			 * This method is used to handle the destroyer upside down with the help of the
+			 * animation timer.
+			 */
 			@Override
 			public void handle(long now) {
 				destroyer.gettoken().setLayoutY(destroyer.gettoken().getLayoutY()+speed);
@@ -385,7 +450,10 @@ public class Gameplay {
 			}
 		};
 		t.start();
-	}
+	}/**
+		 * This is the screen builder which is calling all the snakes, balls etc in the loop.
+		 * @param scene
+		 */
 	public void screenbuild(Scene scene) {
 	
 		AnimationTimer timer=new AnimationTimer() {
