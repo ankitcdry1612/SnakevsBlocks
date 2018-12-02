@@ -15,7 +15,7 @@ public class Leaderboard {
 	private Pane pane;
 	private Rectangle[] playersarray;
 	private Text[] scoresarray;
-	Leaderboard(Scene scene){
+	public Leaderboard(Scene scene){
 		
 		
 		pane=new Pane();

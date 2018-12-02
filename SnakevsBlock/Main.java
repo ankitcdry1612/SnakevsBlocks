@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	static Leaderboard board;
@@ -24,6 +25,7 @@ public class Main extends Application {
 		MainMenu menu=new MainMenu(scene);
 		board=new Leaderboard(scene);
 		stage.setScene(scene);
+		stage.initStyle(StageStyle.UNDECORATED);
 		stage.show();
 		
 		

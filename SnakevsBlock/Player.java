@@ -1,10 +1,13 @@
 import java.io.Serializable;
+import java.util.Date;
 
 public class Player implements Comparable,Serializable{
 	private String Name;
 	private int Score;
+	private Date date;
 	Player(String Name){
 		this.Name=Name;
+		date=new Date();
 		this.Score=Score;
 		Score=0;
 	}
@@ -25,7 +28,7 @@ public class Player implements Comparable,Serializable{
 		return Score;
 	}
 	public String toString() {
-		return (Name+" "+Score);
+		return ("Name: "+Name+"      Score: "+Score+"    Date/Time"+date.toGMTString());
 	}
 	public void setscore(int val) {
 		Score=val;

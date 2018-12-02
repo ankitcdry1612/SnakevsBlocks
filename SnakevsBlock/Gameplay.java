@@ -113,6 +113,15 @@ public class Gameplay {
 		home.setLayoutX(210.0);
 		home.setLayoutY(0);
 		home.setOnAction(e -> {
+			if(gameover==1) {
+				try {
+					Main.out=new ObjectOutputStream(new FileOutputStream("leaderboard.txt"));
+					Main.out.writeObject(Main.board.getplayers());
+				} catch (IOException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+				}
+			}
 			gameover=1;
 			try {
 				Main.out=new ObjectOutputStream(new FileOutputStream("snakelength.txt"));
@@ -185,7 +194,7 @@ public class Gameplay {
 	}
 	public void generateballs() {
 		Random rand=new Random();
-		int n=rand.nextInt(5);
+		int n=rand.nextInt(4)+1;
 		ArrayList<Integer> list = new ArrayList<Integer>();
         for (int i=0; i<5; i++) {
             list.add(i);
@@ -225,7 +234,7 @@ public class Gameplay {
 	}
 	public void generateblocks(Scene scene) {
 		Random rand=new Random();
-		int n=rand.nextInt(5)+1;
+		int n=rand.nextInt(3)+2;
 		ArrayList<Integer> list = new ArrayList<Integer>();
         for (int i=0; i<5; i++) {
             list.add(i);
@@ -248,7 +257,7 @@ public class Gameplay {
 				}
 				else if(pane.getChildren().contains(b.getblock())){
 					if(gameover==0 && b.getblock().getY()>=400 && b.getblock().getY()<=410 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
-						this.stop();
+							
 						pane.getChildren().remove(b.getblock());
 						pane.getChildren().remove(b.gettext());
 						currentscore=currentscore+b.getvalue();
