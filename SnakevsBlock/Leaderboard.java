@@ -9,12 +9,21 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-
+/**
+ * This is Leaderboard class which is used to display the scores of the players.
+ * @author pradeep
+ *
+ */
 public class Leaderboard {
 	private ArrayList<Player> players;
 	private Pane pane;
 	private Rectangle[] playersarray;
 	private Text[] scoresarray;
+	/**
+	 * This is the parameterized constructor, which is used to 
+	 * generates the rectangle of the scores of the players.
+	 * @param scene, It takes the parameter scene, on which the leaderboard shouuld be shown.
+	 */
 	public Leaderboard(Scene scene){
 		
 		
@@ -69,12 +78,21 @@ public class Leaderboard {
 		});
 			
 	}
+	/**
+	 * @return This method returns, the list of the players.
+	 */
 	public ArrayList<Player> getplayers(){
 		return players;
-	}
+	}/**
+	 * This method shows the leader board. 
+	 * @param scene, The scene on which the leaderboard should be shown.
+	 */
 	public void show(Scene scene) {
 		scene.setRoot(pane);
-	}
+	}/**
+	 * This method adds the score to the list of the players.
+	 * @param p, it takes the score of player as parameter.
+	 */
 	public void addscore(Player p) {
 		if(players.size()<10) {
 			this.players.add(p);
@@ -89,7 +107,9 @@ public class Leaderboard {
 				board();
 			}
 		}
-	}
+	}/**
+	 * This method writes the score in front of the player name.
+	 */
 	public void board() {
 		for(int i=0;i<players.size();i++) {
 			scoresarray[i].setText(players.get(i).toString());
