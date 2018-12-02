@@ -6,8 +6,20 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+/**
+ * This is Ball class which extends token class.
+ * This class is used to generate a snake.
+ * @author pradeep
+ *
+ */
 public class Ball extends Token {
+	/**
+	 * Below is the default constructor of the Ball class.
+	 * The shape of ball is circle, which is initialised by the constructer. By calling the
+	 * super constructor of parent class.
+	 * we set the radius of the ball as 10 unit.
+	 * and the coordinates of the snake are set randomly.
+	 */
 	public Ball() {
 		super(new Circle());
 		Random rand=new Random();
@@ -25,6 +37,12 @@ public class Ball extends Token {
 		super.gettext().setX(super.gettoken().getLayoutX()-5);
 		super.gettext().setY(super.gettoken().getLayoutY()+2);
 	}
+	/**
+	 * This method randomly generates the token ball.
+	 * When the snake eats the ball, the length of the snake got increases.
+	 * This method also assures that, two balls are overlapping or not.
+	 * @param list The parameter to this is arraylist of integer , which helps in generating random balls.
+	 */
 	public Ball(ArrayList<Integer> list) {
 		super(new Circle());
 		Random rand=new Random();
