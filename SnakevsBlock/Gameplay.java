@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -34,8 +33,10 @@ public class Gameplay {
 	private int speed;
 	double l1=10;
 	double r1=490;
-	public Gameplay(Scene scene){
+	private Player player;
+	public Gameplay(Scene scene,Player player){
 		pane=new Pane();
+		this.player=player;
 		speed=4;
 		currentscore=0;
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
@@ -46,7 +47,9 @@ public class Gameplay {
 		addscore();
 		home(scene);
 		screenbuild(scene);
-		pane.getChildren().remove(snake);
+		
+	}
+	public void play(Scene scene) {
 		scene.setRoot(pane);
 	}
 	public void restart(Scene scene) {
@@ -55,7 +58,8 @@ public class Gameplay {
 		restart.setLayoutX(435.0);
 		restart.setLayoutY(0);
 		restart.setOnAction(e ->{
-			Gameplay gameplay = new Gameplay(scene);
+			Gameplay gameplay = new Gameplay(scene,player);
+			gameplay.play(scene);
 		});
 		pane.getChildren().add(restart);
 	}
@@ -65,11 +69,7 @@ public class Gameplay {
 		home.setLayoutX(210.0);
 		home.setLayoutY(0);
 		home.setOnAction(e -> {
-			try {
-				MainMenu menu=new MainMenu(scene);
-				} catch (IOException error) {
-				error.printStackTrace();
-				}
+			MainMenu menu = new MainMenu(scene);
 		});
 		pane.getChildren().add(home);
 	}
@@ -93,11 +93,7 @@ public class Gameplay {
 				// TODO Auto-generated method stub
 				 switch (event.getCode()) {
 		         	case HOME:
-		         		try {
-		         			MainMenu menu=new MainMenu(scene);
-		         			} catch (IOException e) {
-		         			e.printStackTrace();
-		         			}
+		         		MainMenu menu=new MainMenu(scene);
 		        }
 			}
 			
@@ -193,7 +189,10 @@ public class Gameplay {
 								snake.removeball(b.getvalue(), pane);
 							}
 							catch(Exception e) {
+								player.setscore(currentscore);
+								Main.board.addscore(player);
 								gameover=1;
+								
 							}
 						}
 					}

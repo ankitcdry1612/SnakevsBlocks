@@ -1,15 +1,11 @@
-import java.awt.Font;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Scanner;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -17,12 +13,10 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MainMenu implements Serializable {
+public class MainMenu {
 	private Pane pane;
 	private Button start;
 	private Button exit;
@@ -30,8 +24,14 @@ public class MainMenu implements Serializable {
 	private Button leaderboard;
 	private Button help;
 	private Gameplay game;
-	public MainMenu(Scene scene) throws IOException {
+	private TextField Name;
+	private Player player;
+	public MainMenu(Scene scene) {
 		pane=new Pane();
+		Name=new TextField();
+		Name.setText("Noobie");
+		Name.setLayoutX(70);
+		Name.setLayoutY(30);
 		
 		pane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 		start=new Button("Start");
@@ -43,54 +43,40 @@ public class MainMenu implements Serializable {
 		setup(scene);
 		help(scene);
 		exit(scene);
+		pane.getChildren().add(Name);
+		
 		scene.setRoot(pane);
 	}
-	public void exit(Scene scene) throws IOException {
+	public void exit(Scene scene) {
 		Pane exitpane = new Pane();
 		Button yes = new Button("Yes");
 		Button no = new Button("No");
 		Text sure=new Text("Are you sure?");
 		sure.setX(100);
 		sure.setY(100);
-		sure.setX(180);
-		sure.setY(300);
-//		sure.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 50));
 		yes.setStyle("-fx-background-color: Red;");
-		yes.setLayoutY(350);
-		yes.setLayoutX(130);
+		yes.setLayoutY(375);
+		yes.setLayoutX(200);
 		no.setStyle("-fx-background-color: Green;");
-		no.setLayoutY(350);
-		no.setLayoutX(280);
+		no.setLayoutY(375);
+		no.setLayoutX(400);
 		exitpane.getChildren().addAll(yes,no,sure);
 		exit.setOnAction(e ->{
 			scene.setRoot(exitpane);
 			yes.setOnAction(e1 -> {
 				try {
-					ObjectOutputStream writetofile = new ObjectOutputStream(new FileOutputStream("Game.txt"));
-					writetofile.writeObject(game);
-				}catch(IOException error){
-					error.getMessage();
+					Main.out=new ObjectOutputStream(new FileOutputStream("leaderboard.txt"));
+					Main.out.writeObject(Main.board.getplayers());
+				} catch (IOException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
 				}
-				finally {
-					System.exit(0);
-				}
+				System.exit(0);
 			});
 			no.setOnAction(e2 -> {
-				try {
-					MainMenu main = new MainMenu(scene);
-					} catch (IOException e3) {
-						e3.printStackTrace();
-					}
+				MainMenu main = new MainMenu(scene);
 			});
 		});
-	}
-	public void resume(Scene scene) throws FileNotFoundException, IOException, ClassNotFoundException {
-		ObjectInputStream readfile = new ObjectInputStream(new FileInputStream("game.txt"));
-		try {
-			game = (Gameplay) readfile.readObject();
-		}catch(Exception error) {
-			game = new Gameplay(scene);
-		}
 	}
 	public void help(Scene scene) {
 		Pane helppane=new Pane();
@@ -178,7 +164,9 @@ public class MainMenu implements Serializable {
 		exit.setLayoutX(100.0);
 		exit.setLayoutY(400.0);
 		start.setOnAction(e ->{
-			game=new Gameplay(scene);
+			player=new Player(Name.getText());
+			game=new Gameplay(scene,player);
+			game.play(scene);
 		});
 		/*exit.setOnAction(e ->{
 			System.exit(0);
@@ -186,88 +174,10 @@ public class MainMenu implements Serializable {
 		
 	}
 	public void leaderboard(Scene scene) {
-		Rectangle player1 = new Rectangle(500,50);
-		Rectangle player2 = new Rectangle(500,50);
-		Rectangle player3 = new Rectangle(500,50);
-		Rectangle player4 = new Rectangle(500,50);
-		Rectangle player5 = new Rectangle(500,50);
-		Rectangle player6 = new Rectangle(500,50);
-		Rectangle player7 = new Rectangle(500,50);
-		Rectangle player8 = new Rectangle(500,50);
-		Rectangle player9 = new Rectangle(500,50);
-		Rectangle player10 = new Rectangle(500,50);
-		player1.setTranslateX(0);
-		player1.setTranslateY(55);
-		player2.setTranslateX(0);
-		player2.setTranslateY(115);
-		player3.setTranslateX(0);
-		player3.setTranslateY(175);
-		player4.setTranslateX(0);
-		player4.setTranslateY(235);
-		player5.setTranslateX(0);
-		player5.setTranslateY(295);
-		player6.setTranslateX(0);
-		player6.setTranslateY(355);
-		player7.setTranslateX(0);
-		player7.setTranslateY(415);
-		player8.setTranslateX(0);
-		player8.setTranslateY(475);
-		player9.setTranslateX(0);
-		player9.setTranslateY(535);
-		player10.setTranslateX(0);
-		player10.setTranslateY(595);
-		player1.setFill(Color.YELLOW);
-		player2.setFill(Color.YELLOW);
-		player3.setFill(Color.YELLOW);
-		player4.setFill(Color.YELLOW);
-		player5.setFill(Color.YELLOW);
-		player6.setFill(Color.YELLOW);
-		player7.setFill(Color.YELLOW);
-		player8.setFill(Color.YELLOW);
-		player9.setFill(Color.YELLOW);
-		player10.setFill(Color.YELLOW);
-		Text score1 = new Text("Player1 score is : " + 0);
-		Text score2 = new Text("Player2 score is : " + 0);
-		Text score3 = new Text("Player3 score is : " + 0);
-		Text score4 = new Text("Player4 score is : " + 0);
-		Text score5 = new Text("Player5 score is : " + 0);
-		Text score6 = new Text("Player6 score is : " + 0);
-		Text score7 = new Text("Player7 score is : " + 0);
-		Text score8 = new Text("Player8 score is : " + 0);
-		Text score9 = new Text("Player9 score is : " + 0);
-		Text score10 = new Text("Player10 score is : " + 0);
-		score1.setTranslateX(50);
-		score1.setTranslateY(85);
-		score2.setTranslateX(50);
-		score2.setTranslateY(145);
-		score3.setTranslateX(50);
-		score3.setTranslateY(205);
-		score4.setTranslateX(50);
-		score4.setTranslateY(265);
-		score5.setTranslateX(50);
-		score5.setTranslateY(325);
-		score6.setTranslateX(50);
-		score6.setTranslateY(385);
-		score7.setTranslateX(50);
-		score7.setTranslateY(445);
-		score8.setTranslateX(50);
-		score8.setTranslateY(505);
-		score9.setTranslateX(50);
-		score9.setTranslateY(565);
-		score10.setTranslateX(50);
-		score10.setTranslateY(625);
-		Pane ldboard = new Pane();
-//		pane.setTitle("ScoreBoard");
-		pane.setStyle("-fx-background-color: Yellow;");
-		Button back = new Button("back");
-		back.setStyle("-fx-background-color: Red;");
-		ldboard.getChildren().addAll(player1,player2,player3,player4,player5,player6,player7,player8,player9,player10,back,score1,score2,score3,score4,score5,score6,score7,score8,score9,score10);
 		leaderboard.setOnAction(e -> {
-			scene.setRoot(ldboard);
-			back.setOnAction(e1 -> {
-				scene.setRoot(pane);
-			});
+			Main.board.show(scene);
 		});
+		
 	}
 	public Pane getpane() {
 		return pane;
