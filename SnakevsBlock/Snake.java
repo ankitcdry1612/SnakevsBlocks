@@ -9,18 +9,18 @@ public class Snake {
 	private ArrayList<Token> snake; 
 	private Token ball;
 	private int length;
-	private int x;
-	private int y;
-	public Snake() {
+	private double x;
+	private double y;
+	public Snake(int l,double pos) {
 		snake=new ArrayList<Token>();
-		x=250;
+		x=pos;
 		y=500;
 		length=0;
-		for(int i=0;i<4;i++) {
+		for(int i=0;i<l;i++) {
 			ball=new Ball();
 			ball.gettoken().setLayoutX(x);
 			ball.gettext().setX(x-5);
-			ball.gettext().setY(y+2);
+			ball.gettext().setY(y-11);
 			ball.gettoken().setLayoutY(y);
 			length++;
 			ball.gettext().setText("");
@@ -28,6 +28,7 @@ public class Snake {
 			y=y+20;
 		}
 		snake.get(0).gettext().setText(Integer.toString(length));
+		snake.get(0).gettext().setFill(Color.WHITE);
 	}
 	public ArrayList<Token> getsnake() {
 		return snake;

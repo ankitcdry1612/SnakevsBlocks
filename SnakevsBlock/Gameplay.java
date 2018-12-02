@@ -1,3 +1,9 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -7,6 +13,8 @@ import javafx.animation.SequentialTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -31,18 +39,53 @@ public class Gameplay {
 	private int destroy;
 	private int ismagnet;
 	private int speed;
+	private int isresume;
 	double l1=10;
 	double r1=490;
 	private Player player;
-	public Gameplay(Scene scene,Player player){
+	public Gameplay(Scene scene,Player player,int isresume) {
 		pane=new Pane();
 		this.player=player;
-		speed=4;
-		currentscore=0;
+		this.isresume=isresume;
+		
+		if(isresume==1) {
+			try {
+				
+				Main.in=new ObjectInputStream(new FileInputStream("score.txt"));
+				currentscore=(int) Main.in.readObject();
+				Main.in=new ObjectInputStream(new FileInputStream("snakelength.txt"));
+				int l=(int) Main.in.readObject();
+				Main.in=new ObjectInputStream(new FileInputStream("snakepos.txt"));
+				double pos=(double) Main.in.readObject();
+				snake=new Snake(l,pos);
+				
+				
+			}
+			catch(Exception e) {
+				currentscore=0;
+				snake=new Snake(4,250);
+			}
+		}
+		else {
+			currentscore=0;
+			snake=new Snake(4,250);
+		}
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-		snake=new Snake();
 		makesnake();
 		movesnake(scene);
+		if(snake.getlength()>30){
+			speed=7;
+		}
+		else if(snake.getlength()>20) {
+			speed=6;
+		}
+		else if(snake.getlength()>10) {
+			speed=5;
+		}
+		else if(snake.getlength()>0) {
+			speed=4;
+		}
+			
 		restart(scene);
 		addscore();
 		home(scene);
@@ -58,7 +101,8 @@ public class Gameplay {
 		restart.setLayoutX(435.0);
 		restart.setLayoutY(0);
 		restart.setOnAction(e ->{
-			Gameplay gameplay = new Gameplay(scene,player);
+			gameover=1;
+			Gameplay gameplay = new Gameplay(scene,player,0);
 			gameplay.play(scene);
 		});
 		pane.getChildren().add(restart);
@@ -69,6 +113,19 @@ public class Gameplay {
 		home.setLayoutX(210.0);
 		home.setLayoutY(0);
 		home.setOnAction(e -> {
+			gameover=1;
+			try {
+				Main.out=new ObjectOutputStream(new FileOutputStream("snakelength.txt"));
+				Main.out.writeObject(snake.getlength());
+				Main.out=new ObjectOutputStream(new FileOutputStream("score.txt"));
+				Main.out.writeObject(currentscore);
+				Main.out=new ObjectOutputStream(new FileOutputStream("snakepos.txt"));
+				Main.out.writeObject(snake.getposition());
+			} catch (Exception ex) {
+				// TODO Auto-generated catch block
+				
+				
+			}
 			MainMenu menu = new MainMenu(scene);
 		});
 		pane.getChildren().add(home);
@@ -103,12 +160,24 @@ public class Gameplay {
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
-				if(event.getX()>l1 && event.getX()<r1 && gameover==0) {
+				{if(event.getX()>l1 && event.getX()<r1 && gameover==0) {
 					for(int i=0;i<snake.getsnake().size();i++) {
 						snake.getb(i).gettoken().setLayoutX(event.getX());
-						snake.getb(i).gettext().setLayoutX(event.getX()-250);
+						snake.getb(i).gettext().setX(event.getX()-5);
 						
 					}
+				}}
+				if(snake.getlength()>30){
+					speed=7;
+				}
+				else if(snake.getlength()>20) {
+					speed=6;
+				}
+				else if(snake.getlength()>10) {
+					speed=5;
+				}
+				else if(snake.getlength()>0) {
+					speed=4;
 				}
 			}
 			
@@ -136,7 +205,7 @@ public class Gameplay {
 					snake.addball(b.getvalue(),pane);
 				}
 				if(pane.getChildren().contains(b.gettoken())) {
-					if(gameover==0 && b.gettoken().getLayoutY()==480 && b.gettoken().getLayoutX()-20<snake.getsnake().get(0).gettoken().getLayoutX() && b.gettoken().getLayoutX()+20>snake.getsnake().get(0).gettoken().getLayoutX() ) {
+					if(gameover==0 && b.gettoken().getLayoutY()>480 && b.gettoken().getLayoutY()<490  && b.gettoken().getLayoutX()-20<snake.getsnake().get(0).gettoken().getLayoutX() && b.gettoken().getLayoutX()+20>snake.getsnake().get(0).gettoken().getLayoutX() ) {
 						pane.getChildren().remove(b.gettoken());
 						pane.getChildren().remove(b.gettext());
 						snake.addball(b.getvalue(),pane);
@@ -178,7 +247,7 @@ public class Gameplay {
 					score.setText("score"+" "+Integer.toString(currentscore));
 				}
 				else if(pane.getChildren().contains(b.getblock())){
-					if(gameover==0 && b.getblock().getY()>=400 && b.getblock().getY()<=402 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
+					if(gameover==0 && b.getblock().getY()>=400 && b.getblock().getY()<=410 && b.getblock().getX()<snake.getsnake().get(0).gettoken().getLayoutX() && b.getblock().getX()+100>snake.getsnake().get(0).gettoken().getLayoutX()) {
 						this.stop();
 						pane.getChildren().remove(b.getblock());
 						pane.getChildren().remove(b.gettext());
@@ -191,8 +260,10 @@ public class Gameplay {
 							catch(Exception e) {
 								player.setscore(currentscore);
 								Main.board.addscore(player);
+								Image Gameover=new Image("file:GameOver.gif");
+								ImageView view =new ImageView(Gameover);
+								pane.getChildren().add(view);
 								gameover=1;
-								
 							}
 						}
 					}

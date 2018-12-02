@@ -44,22 +44,26 @@ public class MainMenu {
 		help(scene);
 		exit(scene);
 		pane.getChildren().add(Name);
-		
+		resumegame(scene);
 		scene.setRoot(pane);
 	}
 	public void exit(Scene scene) {
 		Pane exitpane = new Pane();
 		Button yes = new Button("Yes");
 		Button no = new Button("No");
-		Text sure=new Text("Are you sure?");
-		sure.setX(100);
-		sure.setY(100);
+		Text sure=new Text("Do you want to quit game?");
+		sure.setX(110);
+		sure.setY(310);
 		yes.setStyle("-fx-background-color: Red;");
-		yes.setLayoutY(375);
-		yes.setLayoutX(200);
+		yes.setLayoutY(350);
+		yes.setLayoutX(180);
+//		yes.setMaxHeight(500);
+//		yes.setMaxWidth(500);
+//		no.setMaxSize(100, 200);
+		sure.setStyle("-fx-font: 25 arial;");;
 		no.setStyle("-fx-background-color: Green;");
-		no.setLayoutY(375);
-		no.setLayoutX(400);
+		no.setLayoutY(350);
+		no.setLayoutX(275);
 		exitpane.getChildren().addAll(yes,no,sure);
 		exit.setOnAction(e ->{
 			scene.setRoot(exitpane);
@@ -165,12 +169,10 @@ public class MainMenu {
 		exit.setLayoutY(400.0);
 		start.setOnAction(e ->{
 			player=new Player(Name.getText());
-			game=new Gameplay(scene,player);
+			game=new Gameplay(scene,player,0);
 			game.play(scene);
 		});
-		/*exit.setOnAction(e ->{
-			System.exit(0);
-		});*/
+		
 		
 	}
 	public void leaderboard(Scene scene) {
@@ -181,5 +183,12 @@ public class MainMenu {
 	}
 	public Pane getpane() {
 		return pane;
+	}
+	public void resumegame(Scene scene) {
+		resume.setOnAction(e ->{
+			player=new Player(Name.getText());
+			game=new Gameplay(scene,player,1);
+			game.play(scene);
+		});
 	}
 }
