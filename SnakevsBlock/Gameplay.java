@@ -52,6 +52,7 @@ public class Gameplay {
 	 * Below is the parameterized constructor of the Gameplay class
 	 * @param scene , It is the scene on the which the game is operating.
 	 * @param player, This is the player, who is playing the game.
+	 * @param isresume, checks whether resume is being pressed or not.
 	 * The constructor sets the speed of the snake, default as 4 unit.
 	 * It has the restart,home and score button over itself.
 	 * It initialize the score.
