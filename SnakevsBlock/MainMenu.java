@@ -15,7 +15,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+/**
+ * This is the mainmenu class, which is the homepage of the Game.
+ * It has the different options on the panel, to do different tasks.
+ * @author pradeep
+ *
+ */
 public class MainMenu {
 	private Pane pane;
 	private Button start;
@@ -26,6 +31,13 @@ public class MainMenu {
 	private Gameplay game;
 	private TextField Name;
 	private Player player;
+	/**
+	 * This is the parameterized constructor of the Mainmenu.
+	 * It initialize the different buttons like start,resume etc.
+	 * It sets the name of the player as Noobie.
+	 * It creates a pane.
+	 * @param scene, This is the scene over which the above thing should be initialized.
+	 */
 	public MainMenu(Scene scene) {
 		pane=new Pane();
 		Name=new TextField();
@@ -47,6 +59,10 @@ public class MainMenu {
 		resumegame(scene);
 		scene.setRoot(pane);
 	}
+	/**
+	 * This is the exit method used to quit the game.
+	 * @param scene, It is the scene on which the game is being operated.
+	 */
 	public void exit(Scene scene) {
 		Pane exitpane = new Pane();
 		Button yes = new Button("Yes");
@@ -65,6 +81,10 @@ public class MainMenu {
 		no.setLayoutY(350);
 		no.setLayoutX(275);
 		exitpane.getChildren().addAll(yes,no,sure);
+		/**
+		 * Below is the event handler of the exit button.
+		 * which creates a new pane and asks whether to quit or not.
+		 */
 		exit.setOnAction(e ->{
 			scene.setRoot(exitpane);
 			yes.setOnAction(e1 -> {
@@ -82,6 +102,11 @@ public class MainMenu {
 			});
 		});
 	}
+	/**
+	 * Below is the help method, which creates the new pane.
+	 * And provides all the information, which is helpful to play the game.
+	 * @param scene, This is the scene on which the game is being operated.
+	 */
 	public void help(Scene scene) {
 		Pane helppane=new Pane();
 		Image image3 = new Image("file:Help.jpeg");
@@ -132,13 +157,21 @@ public class MainMenu {
 		text7.setFill(Color.RED);
 		text8.setFill(Color.RED);
 		helppane.getChildren().addAll(image2,text1,text2,text3,text4,text5,text6,text7,text8,back);
+		/**
+		 * This is the help event handler.
+		 * which is used to create a new pane of help instructions.
+		 */
 		help.setOnAction(e -> {
 			scene.setRoot(helppane);
 			back.setOnAction(e1 -> {
 				scene.setRoot(pane);
 			});
 		});
-	}
+	}/**
+	 * Below method setups the stage for the mainmenu.
+	 * It sets a specific image as background image of the mainmenu.
+	 * @param scene, This is the scene on which the game is being operated.
+	 */
 	public void setup(Scene scene) {
 		Image image = new Image("file:SnakevsBlock.png");
 		ImageView image1 = new ImageView();
@@ -167,6 +200,10 @@ public class MainMenu {
 		help.setLayoutY(320.0);
 		exit.setLayoutX(100.0);
 		exit.setLayoutY(400.0);
+		/**
+		 * Below is the start event handler.
+		 * which takes the user to the game page.
+		 */
 		start.setOnAction(e ->{
 			player=new Player(Name.getText());
 			game=new Gameplay(scene,player,0);
@@ -175,15 +212,29 @@ public class MainMenu {
 		
 		
 	}
+	/**
+	 * This is the leaderboard method which is used to check leaderboard.
+	 * @param scene, this is the scene on which the game is being operated.
+	 */
 	public void leaderboard(Scene scene) {
+		/**
+		 * this is the event handler leaderboard.
+		 * which shows the score top 10 players in the sorted order.
+		 */
 		leaderboard.setOnAction(e -> {
 			Main.board.show(scene);
 		});
 		
-	}
+	}/**
+	 * This method returns the current pane.
+	 */
 	public Pane getpane() {
 		return pane;
 	}
+	/**
+	 * This method serializes the old game data.
+	 * @param scene, This is the scene on which the game is operating.
+	 */
 	public void resumegame(Scene scene) {
 		resume.setOnAction(e ->{
 			player=new Player(Name.getText());
