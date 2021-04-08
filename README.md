@@ -2,7 +2,7 @@
 Snake vs Block game in java
 1. Go to SnakevsBlock folder
 2. run javac Main.java
-3. run java main
+3. run java Main
 
 # MainMenu
 ![MainMenu](https://github.com/ankitcdry1612/SnakevsBlocks/blob/master/Image/MainMenu.png)
